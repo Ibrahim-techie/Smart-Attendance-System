@@ -93,7 +93,7 @@ form.addEventListener("submit", async (e) => {
 
 
   try {
-    const response = await fetch("http://localhost:5000/api/students/register", {
+    const response = await fetch("https://smart-attendance-system-2p2j.onrender.com/api/students/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, collegeId, password, faceDescriptor })
