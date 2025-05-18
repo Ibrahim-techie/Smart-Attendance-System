@@ -66,7 +66,7 @@ function getLocationAndGenerateCode() {
 }
 
 function sendCodeToServer(code, latitude, longitude) {
-  fetch("http://localhost:5000/api/generateCode/generate", {
+  fetch("https://smart-attendance-system-2p2j.onrender.com/api/generateCode/generate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
