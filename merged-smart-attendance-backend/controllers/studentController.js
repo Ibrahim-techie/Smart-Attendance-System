@@ -120,6 +120,8 @@ exports.getStudentProfile = async (req, res) => {
   }
 };
 // ✅ Mark Attendance
+
+
 exports.markAttendance = async (req, res) => {
   const { collegeId, code, faceDescriptor } = req.body;
 
@@ -133,6 +135,10 @@ exports.markAttendance = async (req, res) => {
       return res.status(404).json({ message: "Student not found." });
     }
 
+    if (!student.faceDescriptor || student.faceDescriptor.length !== 128) {
+      return res.status(400).json({ message: "No registered face found for this student." });
+    }
+
     const lecture = await LectureCode.findOne({ code });
     if (!lecture) {
       return res.status(400).json({ message: "Invalid or expired code." });
@@ -141,13 +147,14 @@ exports.markAttendance = async (req, res) => {
     const distance = euclideanDistance(student.faceDescriptor, faceDescriptor);
     console.log("🧠 Face distance:", distance);
 
-    if (distance > 0.6) {
-      return res.status(401).json({ message: "Face mismatch. Attendance not marked." });
+    const threshold = 0.4; // Stricter match
+    if (distance > threshold) {
+      return res.status(401).json({ message: "❌ Face mismatch. Attendance not marked." });
     }
 
     const attendance = new Attendance({
       studentId: student._id,
-      studentName: student.name, // ✅ ADD THIS
+      studentName: student.name,
       code,
       status: "Present"
     });
